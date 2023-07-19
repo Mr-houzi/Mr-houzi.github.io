@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html style="display: none;" lang="zh">
+    <head>
+    <meta charset="utf-8">
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.5.6 -->
+    <script>
+        window.materialVersion = "1.5.6"
+        // Delete localstorage with these tags
+        window.oldVersion = [
+            'codestartv1',
+            '1.3.4',
+            '1.4.0',
+            '1.4.0b1',
+            '1.5.0',
+            '1.5.2',
+            '1.5.5'
+        ]
+    </script>
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+
+
+
+
+
+
+
+    <link rel="dns-prefetch" href="https://hm.baidu.com"/>
+
+
+
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com"/>
+
+
+
+
+
+    <!-- Meta & Info -->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!-- Title -->
+    
+    <title>
+        
+            整明白 Golang slice 声明方式、浅复制现象、深复制、append操作 | 
+        
+        Mr-houzi - 记录生活点滴
+    </title>
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" href="/img/favicon.png">
+
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="description" itemprop="description" content="mr-houzi猴子星球记录生活点滴">
+    <meta name="keywords" content="猴子星球,Mr-houzi,mr-houzi,记录生活点滴,不务正业的程序猿,猴子先生,编程,技术,golang">
+    <meta name="theme-color" content="#0097A7">
+
+    <!-- Disable Fucking Bloody Baidu Tranformation -->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+
+    <!-- Import lsloader -->
+    <script>(function(){window.lsloader={jsRunSequence:[],jsnamemap:{},cssnamemap:{}};lsloader.removeLS=function(a){try{localStorage.removeItem(a)}catch(b){}};lsloader.setLS=function(a,c){try{localStorage.setItem(a,c)}catch(b){}};lsloader.getLS=function(a){var c="";try{c=localStorage.getItem(a)}catch(b){c=""}return c};versionString="/*"+(window.materialVersion||"unknownVersion")+"*/";lsloader.clean=function(){try{var b=[];for(var a=0;a<localStorage.length;a++){b.push(localStorage.key(a))}b.forEach(function(e){var f=lsloader.getLS(e);if(window.oldVersion){var d=window.oldVersion.reduce(function(g,h){return g||f.indexOf("/*"+h+"*/")!==-1},false);if(d){lsloader.removeLS(e)}}})}catch(c){}};lsloader.clean();lsloader.load=function(f,a,b,d){if(typeof b==="boolean"){d=b;b=undefined}d=d||false;b=b||function(){};var e;e=this.getLS(f);if(e&&e.indexOf(versionString)===-1){this.removeLS(f);this.requestResource(f,a,b,d);return}if(e){var c=e.split(versionString)[0];if(c!=a){console.log("reload:"+a);this.removeLS(f);this.requestResource(f,a,b,d);return}e=e.split(versionString)[1];if(d){this.jsRunSequence.push({name:f,code:e});this.runjs(a,f,e)}else{document.getElementById(f).appendChild(document.createTextNode(e));b()}}else{this.requestResource(f,a,b,d)}};lsloader.requestResource=function(b,e,a,c){var d=this;if(c){this.iojs(e,b,function(h,f,g){d.setLS(f,h+versionString+g);d.runjs(h,f,g)})}else{this.iocss(e,b,function(f){document.getElementById(b).appendChild(document.createTextNode(f));d.setLS(b,e+versionString+f)},a)}};lsloader.iojs=function(d,b,g){var a=this;a.jsRunSequence.push({name:b,code:""});try{var f=new XMLHttpRequest();f.open("get",d,true);f.onreadystatechange=function(){if(f.readyState==4){if((f.status>=200&&f.status<300)||f.status==304){if(f.response!=""){g(d,b,f.response);return}}a.jsfallback(d,b)}};f.send(null)}catch(c){a.jsfallback(d,b)}};lsloader.iocss=function(f,c,h,a){var b=this;try{var g=new XMLHttpRequest();g.open("get",f,true);g.onreadystatechange=function(){if(g.readyState==4){if((g.status>=200&&g.status<300)||g.status==304){if(g.response!=""){h(g.response);a();return}}b.cssfallback(f,c,a)}};g.send(null)}catch(d){b.cssfallback(f,c,a)}};lsloader.iofonts=function(f,c,h,a){var b=this;try{var g=new XMLHttpRequest();g.open("get",f,true);g.onreadystatechange=function(){if(g.readyState==4){if((g.status>=200&&g.status<300)||g.status==304){if(g.response!=""){h(g.response);a();return}}b.cssfallback(f,c,a)}};g.send(null)}catch(d){b.cssfallback(f,c,a)}};lsloader.runjs=function(f,c,e){if(!!c&&!!e){for(var b in this.jsRunSequence){if(this.jsRunSequence[b].name==c){this.jsRunSequence[b].code=e}}}if(!!this.jsRunSequence[0]&&!!this.jsRunSequence[0].code&&this.jsRunSequence[0].status!="failed"){var a=document.createElement("script");a.appendChild(document.createTextNode(this.jsRunSequence[0].code));a.type="text/javascript";document.getElementsByTagName("head")[0].appendChild(a);this.jsRunSequence.shift();if(this.jsRunSequence.length>0){this.runjs()}}else{if(!!this.jsRunSequence[0]&&this.jsRunSequence[0].status=="failed"){var d=this;var a=document.createElement("script");a.src=this.jsRunSequence[0].path;a.type="text/javascript";this.jsRunSequence[0].status="loading";a.onload=function(){d.jsRunSequence.shift();if(d.jsRunSequence.length>0){d.runjs()}};document.body.appendChild(a)}}};lsloader.tagLoad=function(b,a){this.jsRunSequence.push({name:a,code:"",path:b,status:"failed"});this.runjs()};lsloader.jsfallback=function(c,b){if(!!this.jsnamemap[b]){return}else{this.jsnamemap[b]=b}for(var a in this.jsRunSequence){if(this.jsRunSequence[a].name==b){this.jsRunSequence[a].code="";this.jsRunSequence[a].status="failed";this.jsRunSequence[a].path=c}}this.runjs()};lsloader.cssfallback=function(e,c,b){if(!!this.cssnamemap[c]){return}else{this.cssnamemap[c]=1}var d=document.createElement("link");d.type="text/css";d.href=e;d.rel="stylesheet";d.onload=d.onerror=b;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(d,a)};lsloader.runInlineScript=function(c,b){var a=document.getElementById(b).innerText;this.jsRunSequence.push({name:c,code:a});this.runjs()}})();</script>
+
+    <!-- Import queue -->
+    <script>function Queue(){this.dataStore=[];this.offer=b;this.poll=d;this.execNext=a;this.debug=false;this.startDebug=c;function b(e){if(this.debug){console.log("Offered a Queued Function.")}if(typeof e==="function"){this.dataStore.push(e)}else{console.log("You must offer a function.")}}function d(){if(this.debug){console.log("Polled a Queued Function.")}return this.dataStore.shift()}function a(){var e=this.poll();if(e!==undefined){if(this.debug){console.log("Run a Queued Function.")}e()}}function c(){this.debug=true}}var queue=new Queue();</script>
+
+    <!-- Import CSS -->
+    
+        <style id="material_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("material_css","/css/material.min.css?Z7a72R1E4SxzBKR/WGctOA==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+        <style id="style_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("style_css","/css/style.min.css?NKhlKQkXw/c66TR5p4wO+w==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+
+        
+            
+                <style id="prettify_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("prettify_css","/css/prettify.min.css?zp8STOU9v89XWFEnN+6YmQ==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+                <style id="prettify_theme"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("prettify_theme","/css/prettify/atelier-forest-light.min.css?HdofjyGu7b4PtoyvVcYV4A==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+            
+        
+
+    
+
+    
+
+    <!-- Config CSS -->
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    overflow-x: hidden !important;
+  }
+  
+  code {
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  }
+
+  a {
+    color: #00838F;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #0097A7 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #0097A7 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #0097A7 !important;
+  }
+
+  .toTop {
+    background: #757575 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #757575;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #757575;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #757575;
+  }
+
+  .post-toc a:hover {
+    color: #00838F;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-color: #F5F5F5;
+      }
+
+      /* blog_info bottom background */
+      #scheme-Paradox .material-layout .something-else .mdl-card__supporting-text{
+        background-color: #fff;
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+<!-- Import Font -->
+<!-- Import Roboto -->
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+
+
+<!-- Import Material Icons -->
+
+
+    <style id="material_icons"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("material_icons","/css/material-icons.css?pqhB/Rd/ab0H2+kZp0RDmw==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+
+
+
+
+    <!-- Import jQuery -->
+    
+        <script>lsloader.load("jq_js","/js/jquery.min.js?qcusAULNeBksqffqUM2+Ig==", true)</script>
+    
+
+    <!-- WebAPP Icons -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Mr-houzi - 记录生活点滴">
+    <meta name="msapplication-starturl" content="https://mr-houzi.com/2021/11/20/整明白 Golang slice 声明方式、浅复制现象、深复制、append操作/">
+    <meta name="msapplication-navbutton-color" content="#0097A7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Mr-houzi - 记录生活点滴">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!-- Site Verification -->
+    
+    <meta name="baidu-site-verification" content="hMvUTPeayU" />
+
+    <!-- RSS -->
+    
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="https://mr-houzi.com/2021/11/20/整明白 Golang slice 声明方式、浅复制现象、深复制、append操作/">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="整明白 Golang slice 声明方式、浅复制现象、深复制、append操作 | Mr-houzi - 记录生活点滴">
+    <meta property="og:image" content="/img/favicon.png">
+    <meta property="og:description" content="mr-houzi猴子星球记录生活点滴">
+    <meta property="og:article:tag" content="golang"> 
+
+    
+        <meta property="article:published_time" content="Sat Nov 20 2021 16:39:29 GMT+0800">
+        <meta property="article:modified_time" content="Wed Jul 19 2023 16:57:14 GMT+0000">
+    
+
+    <!-- The Twitter Card protocol -->
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Add canonical link for SEO -->
+    
+        <link rel="canonical" href="https://mr-houzi.com/2021/11/20/整明白 Golang slice 声明方式、浅复制现象、深复制、append操作/index.html" />
+    
+
+    <!-- Structured-data for SEO -->
+    
+        
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": "https://mr-houzi.com/2021/11/20/整明白 Golang slice 声明方式、浅复制现象、深复制、append操作/index.html",
+    "headline": "整明白 Golang slice 声明方式、浅复制现象、深复制、append操作",
+    "datePublished": "Sat Nov 20 2021 16:39:29 GMT+0800",
+    "dateModified": "Wed Jul 19 2023 16:57:14 GMT+0000",
+    "author": {
+        "@type": "Person",
+        "name": "Mr-houzi",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/img/avatar.png"
+        },
+        "description": "谈笑有鸿儒，往来无白丁。"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Mr-houzi - 记录生活点滴",
+        "logo": {
+            "@type":"ImageObject",
+            "url": "/img/favicon.png"
+        }
+    },
+    "keywords": ",golang猴子星球,Mr-houzi,mr-houzi,记录生活点滴,不务正业的程序猿,猴子先生,编程,技术",
+    "description": "mr-houzi猴子星球记录生活点滴",
+}
+</script>
+
+
+    
+
+    <!-- Analytics -->
+    
+    
+        <script>
+    var _hmt = _hmt || [];
+    (function() {var hm = document.createElement('script');
+    hm.src = 'https://hm.baidu.com/hm.js?3f0cb3108a68f1780cc3c2a8c0fa56a2';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+    
+    
+
+    <!-- Custom Head -->
+    
+
+</head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top"></div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span id="MD-burger-id" class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+
+    <!-- Left aligned menu below button -->
+    
+    
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是切片"><span class="post-toc-number">1.</span> <span class="post-toc-text">什么是切片</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#声明方式"><span class="post-toc-number">2.</span> <span class="post-toc-text">声明方式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#浅复制现象"><span class="post-toc-number">3.</span> <span class="post-toc-text">浅复制现象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#赋值过程中发生的浅复制"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">赋值过程中发生的浅复制</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#函数形参中发生的浅复制"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">函数形参中发生的浅复制</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#深复制操作"><span class="post-toc-number">4.</span> <span class="post-toc-text">深复制操作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#append-操作"><span class="post-toc-number">5.</span> <span class="post-toc-text">append 操作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#其余几种-slice-声明和操作方式"><span class="post-toc-number">6.</span> <span class="post-toc-text">其余几种 slice 声明和操作方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#amp-T"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">&[]T</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#make"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">make</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#new"><span class="post-toc-number">6.3.</span> <span class="post-toc-text">new</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">7.</span> <span class="post-toc-text">总结</span></a></li></ol>
+    </ul>
+    
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 20 + 1);
+
+    $('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').addClass('lazy');
+</script>
+
+        
+    
+            <p class="article-headline-p">
+                整明白 Golang slice 声明方式、浅复制现象、深复制、append操作
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>Mr-houzi</strong>
+        <span>11月 20, 2021</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        <a class="post_tag-link" href="/tags/golang/">golang</a>
+    </ul>
+    
+
+    <!-- Share -->
+    
+        <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=整明白 Golang slice 声明方式、浅复制现象、深复制、append操作&url=https://mr-houzi.com/2021/11/20/整明白 Golang slice 声明方式、浅复制现象、深复制、append操作/index.html&pic=https://mr-houzi.com/img/favicon.png&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=整明白 Golang slice 声明方式、浅复制现象、深复制、append操作&url=https://mr-houzi.com/2021/11/20/整明白 Golang slice 声明方式、浅复制现象、深复制、append操作/index.html&via=Mr-houzi" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://mr-houzi.com/2021/11/20/整明白 Golang slice 声明方式、浅复制现象、深复制、append操作/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://mr-houzi.com/2021/11/20/整明白 Golang slice 声明方式、浅复制现象、深复制、append操作/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=Mr-houzi - 记录生活点滴&title=整明白 Golang slice 声明方式、浅复制现象、深复制、append操作&summary=mr-houzi猴子星球记录生活点滴&pics=https://mr-houzi.com/img/favicon.png&url=https://mr-houzi.com/2021/11/20/整明白 Golang slice 声明方式、浅复制现象、深复制、append操作/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 QQ
+            </li>
+        </a>
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+    
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <h2 id="什么是切片"><a href="#什么是切片" class="headerlink" title="什么是切片"></a>什么是切片</h2><p>切片（slice）是对数组一个连续片段的引用。切片是一个引用类型，它实际并不存储元素，它只是标识了数组上的某一个连续片段。</p>
+<p>数组在内存中是一连串的内存空间，每个元素占据一块内存。</p>
+<p>切片的数据结构是一个结构体，结构体内由三个参数。</p>
+<ul>
+<li>Pointer 指向数组中它要表示的片段的起始元素；</li>
+<li>len 长度</li>
+<li>cap 最大容量</li>
+</ul>
+<pre><code class="golang">type slice struct {
+    array unsafe.Pointer
+    len   int
+    cap   int
+}
+</code></pre>
+<p>slice示意图：</p>
+<p><img src="./slice1.png" alt=""></p>
+<h2 id="声明方式"><a href="#声明方式" class="headerlink" title="声明方式"></a>声明方式</h2><p>slice 有<code>[]T{}</code>、<code>new</code> 、<code>make</code>三种声明方式。具体有哪些区别将会根据下面实例进行分析。</p>
+<pre><code class="golang">sl := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;}
+
+sl := make([]string, 4)
+
+sl := new([]string)
+*sl = make([]string, 4)
+</code></pre>
+<h2 id="浅复制现象"><a href="#浅复制现象" class="headerlink" title="浅复制现象"></a>浅复制现象</h2><h3 id="赋值过程中发生的浅复制"><a href="#赋值过程中发生的浅复制" class="headerlink" title="赋值过程中发生的浅复制"></a>赋值过程中发生的浅复制</h3><p>来看实例代码</p>
+<pre><code class="golang">func example1a()  {
+    sl := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;}
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    // 浅复制1：赋值过程中发生的浅复制
+    sl1 := sl
+    fmt.Printf(&quot;sl1:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl1, sl1, &amp;sl1)
+    sl1[0] = &quot;a被修改&quot;
+    fmt.Println(&quot;================ sl1 被修改后 ================&quot;)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+    fmt.Printf(&quot;sl1:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl1, sl1, &amp;sl1)
+}
+</code></pre>
+<pre><code>sl:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+sl1:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc0000040c0
+================ sl1 被修改后 ================
+sl:[a被修改 b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+sl1:[a被修改 b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc0000040c0
+</code></pre><p>sl 声明得到了一个切片，并在创建了一个数组，sl 切片的内部指针指向这个数组。</p>
+<p>sl1 由 sl 赋值而来，sl1 得到了一个和 sl 一样的切片，同样它的内部指针也指向最初创建的数组。</p>
+<p>当对 sl1 的索引 0 进行修改后，打印 sl 对应的元素值也将发生变化。</p>
+<p><img src="./slice2.png" alt=""></p>
+<p>通常，在没有了解切片结构的开发者，会误以为 sl1 与 sl 是完全独立，互相的修改并不影响对方。实际上，它们确实是两个完全独立的内存，但是它们的内部结构都指向了同一个数组。</p>
+<p><strong>切片并不存储数组元素，它只是<del>搬运工</del>，标识了数组上的片段区间。</strong></p>
+<p>所以， sl1[0] 的修改实际上是修改的 sl1 索引0 对应的在数组上的元素值。当访问 sl 时，它读取自己在数组上的片段时，也将受到影响。</p>
+<p>这一现象也被称之为<code>浅复制</code>。</p>
+<h3 id="函数形参中发生的浅复制"><a href="#函数形参中发生的浅复制" class="headerlink" title="函数形参中发生的浅复制"></a>函数形参中发生的浅复制</h3><p><code>浅复制</code>不只发生在变量赋值过程中，在调用函数实参传给形参的时候也在悄然发生。</p>
+<pre><code class="golang">func example1b()  {
+    sl := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;}
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    // 浅复制2：函数形参中发生的浅复制
+    func (slParam []string) {
+        fmt.Printf(&quot;slParam:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, slParam, slParam, &amp;slParam)
+        slParam[0] = &quot;a被修改&quot;
+        fmt.Println(&quot;================ slParam 被修改后 ================&quot;)
+        fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+        fmt.Printf(&quot;slParam:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, slParam, slParam, &amp;slParam)
+    }(sl)
+    // 外部的 sl 也将受到变化
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+}
+</code></pre>
+<pre><code>sl:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+slParam:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc0000040c0
+================ slParam 被修改后 ================
+sl:[a被修改 b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+slParam:[a被修改 b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc0000040c0
+sl:[a被修改 b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+</code></pre><p>在函数内部对形参切片的修改，将影响函数外实参。看过实例1a后，相信你对于这个结果并不会太震惊。</p>
+<p>切片实参和形参是两个不同变量，但它们拥有同样的内部结构，内部结构中的指针依然是分别指向数组。</p>
+<h2 id="深复制操作"><a href="#深复制操作" class="headerlink" title="深复制操作"></a>深复制操作</h2><p>实例1a和1b中展示了切片的浅复制现象，对于如何解决浅复制问题在本例中将会解答。</p>
+<pre><code class="golang">func example3()  {
+    sl := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;}
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    // 深复制：通过 copy 解决赋值过程中发生的浅复制
+    sl2 := make([]string, 4)
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+    copy(sl2, sl)
+    fmt.Println(&quot;================ copy 复制后 ================&quot;)
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+    sl2[0] = &quot;a被修改了&quot;
+    fmt.Println(&quot;================ sl2 被修改后 ================&quot;)
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+}
+</code></pre>
+<pre><code>sl:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+sl2:[   ] 变量（或变量结构某个指针）指向地址（变量值）：0xc0000200c0 变量地址：0xc0000040c0
+================ copy 复制后 ================
+sl2:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc0000200c0 变量地址：0xc0000040c0
+sl:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+================ sl2 被修改后 ================
+sl2:[a被修改了 b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc0000200c0 变量地址：0xc0000040c0
+sl:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+</code></pre><p><strong>本例中通过 copy 方法<code>深复制</code>操作解决了赋值过程中的<code>浅复制</code>现象。</strong>sl2 和 sl 将是两个完全不同的切片，并且其内部指针也将指向两个不同的数组。这样，一方的修改就不会影响另一方了。</p>
+<p><img src="./slice3.png" alt=""></p>
+<h2 id="append-操作"><a href="#append-操作" class="headerlink" title="append 操作"></a>append 操作</h2><p>本例中展示了 <code>append</code> 操作。</p>
+<pre><code class="golang">func example4()  {
+sl := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;}
+    sl2 := sl
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+    fmt.Printf(&quot;sl2:cap:%d,len:%d\n&quot;, cap(sl2), len(sl2))
+
+    fmt.Println(&quot;================ 数组每个元素对应的地址 ================&quot;)
+    fmt.Printf(&quot;a:%p b:%p c:%p d:%p \n&quot;, &amp;sl[0], &amp;sl[1], &amp;sl[2], &amp;sl[3])
+    sl2 = sl2[1:2]
+    fmt.Println(&quot;================ sl2[1:2] 使切片 sl2 指向了 b 元素 ================&quot;)
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+
+    fmt.Printf(&quot;sl2:cap:%d,len:%d\n&quot;, cap(sl2), len(sl2))
+    sl2 = append(sl2[:1], &quot;e&quot;)
+    fmt.Println(&quot;================ 切片还有空闲容量进行 append e ================&quot;)
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    sl2 = append(sl2, &quot;f&quot;)
+    fmt.Println(&quot;================ 切片还有空闲容量进行 append f  ================&quot;)
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    fmt.Printf(&quot;sl2:cap:%d,len:%d\n&quot;, cap(sl2), len(sl2))
+    sl2 = append(sl2, &quot;g&quot;)
+    fmt.Println(&quot;================ 切片没有空闲容量进行 append g  ================&quot;)
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    fmt.Println(&quot;================ 发生扩容后 ================&quot;)
+    fmt.Printf(&quot;sl2:cap:%d,len:%d\n&quot;, cap(sl2), len(sl2))
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+    sl2 = sl2[:6]
+    fmt.Printf(&quot;sl2:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl2, sl2, &amp;sl2)
+    fmt.Println(&quot;================ 新数组每个元素对应的地址 ================&quot;)
+    fmt.Printf(&quot;b:%p c:%p e:%p f:%p \n&quot;, &amp;sl2[0], &amp;sl2[1], &amp;sl2[2], &amp;sl2[3])
+}
+</code></pre>
+<pre><code>sl:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+sl2:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004090
+sl2:cap:4,len:4
+================ 数组每个元素对应的地址 ================
+a:0xc000020080 b:0xc000020090 c:0xc0000200a0 d:0xc0000200b0 
+================ sl2[1:2] 使切片 sl2 指向了 b 元素 ================
+sl2:[b] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020090 变量地址：0xc000004090
+sl2:cap:3,len:1
+================ 切片还有空闲容量进行 append e ================
+sl2:[b e] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020090 变量地址：0xc000004090
+sl:[a b e d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+================ 切片还有空闲容量进行 append f  ================
+sl2:[b e f] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020090 变量地址：0xc000004090
+sl:[a b e f] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+sl2:cap:3,len:3
+================ 切片没有空闲容量进行 append g  ================
+sl2:[b e f g] 变量（或变量结构某个指针）指向地址（变量值）：0xc00004e060 变量地址：0xc000004090
+sl:[a b e f] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+================ 发生扩容后 ================
+sl2:cap:6,len:4
+sl2:[b e f g] 变量（或变量结构某个指针）指向地址（变量值）：0xc00004e060 变量地址：0xc000004090
+sl2:[b e f g  ] 变量（或变量结构某个指针）指向地址（变量值）：0xc00004e060 变量地址：0xc000004090
+================ 新数组每个元素对应的地址 ================
+b:0xc00004e060 c:0xc00004e070 e:0xc00004e080 f:0xc00004e090
+</code></pre><p>1.最初切片刚创建的时候，sl、sl2 切片内部指针指向数组第一个元素a。</p>
+<p>2.经过 <code>sl2 = sl2[1:2]</code> 后，sl2 指向了数组中的第二个 b 元素。</p>
+<p>3.往 sl2 切片 append e 时，此时 sl2 还有空闲空间（cap-len&gt;0），append 操作直接修改了数组元素 c =&gt; e。</p>
+<p>4.往 sl2 切片 append f 时，此时 sl2 依然还有空闲空间（cap-len&gt;0），append 操作直接修改了数组元素 d =&gt; f。</p>
+<p><img src="./slice4.png" alt=""></p>
+<p>5.往 sl2 切片 append g 时，此时 sl2 已经没有空闲空间了（cap-len=0），append 操作会导致扩容。由于数组空间是固定不变的，扩容将使 sl2 指向新的数组。sl2 第一个元素仍然是 b，但它指向地址已经不再是最初数组中元素b的地址了，这一点可以证明发生了扩容，并产生了新数组。</p>
+<p>实际上 sl2 仅需要 4 个空间，对应的新数组却提供了 6 个空间，至于这点应该和切片的扩容机制有关，后续文章可能会继续深入探讨。</p>
+<h2 id="其余几种-slice-声明和操作方式"><a href="#其余几种-slice-声明和操作方式" class="headerlink" title="其余几种 slice 声明和操作方式"></a>其余几种 slice 声明和操作方式</h2><h3 id="amp-T"><a href="#amp-T" class="headerlink" title="&amp;[]T"></a>&amp;[]T</h3><pre><code class="golang">sl := &amp;[]string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;}
+// 等价于
+s := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;}
+sl := &amp;s
+</code></pre>
+<p>sl 将得到的是指向切片的地址，它是一个指针，指向切片，而切片内部指针指向数组。</p>
+<p><img src="./slice5.png" alt=""></p>
+<pre><code class="golang">func example2()  {
+    sl := &amp;[]string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;}
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    sl1 := sl
+    fmt.Printf(&quot;sl1:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl1, sl1, &amp;sl1)
+    *sl1 = append(*sl1, &quot;e&quot;)
+    fmt.Println(&quot;================ append 后 ================&quot;)
+    fmt.Printf(&quot;sl1:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl1, sl1, &amp;sl1)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    (*sl1)[0] = &quot;a被修改&quot;
+    fmt.Println(&quot;================ sl1 被修改后 ================&quot;)
+    fmt.Printf(&quot;sl1:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl1, sl1, &amp;sl1)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+}
+</code></pre>
+<pre><code>sl:&amp;[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006028
+sl1:&amp;[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006038
+================ append 后 ================
+sl1:&amp;[a b c d e] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006038
+sl:&amp;[a b c d e] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006028
+================ sl1 被修改后 ================
+sl1:&amp;[a被修改 b c d e] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006038
+sl:&amp;[a被修改 b c d e] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006028
+</code></pre><h3 id="make"><a href="#make" class="headerlink" title="make"></a>make</h3><p>make 方式创建切片，make 初始化了数组空间大小，元素初始值默认为零值。</p>
+<pre><code class="golang">func example5()  {
+    sl := make([]string, 4)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+    sl[0] = &quot;a&quot;
+    sl[1] = &quot;b&quot;
+    sl[2] = &quot;c&quot;
+    sl[3] = &quot;d&quot;
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+    sl = append(sl, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;, &quot;h&quot;)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+}
+</code></pre>
+<pre><code>sl:[   ] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+sl:[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000020080 变量地址：0xc000004078
+sl:[a b c d e f g h] 变量（或变量结构某个指针）指向地址（变量值）：0xc00010a000 变量地址：0xc000004078
+</code></pre><h3 id="new"><a href="#new" class="headerlink" title="new"></a>new</h3><p>new 创建切片将返回地址，sl 此时拿到的仅是地址，切片对应的数组甚至都没有初始化，此时无法使用这个切片。</p>
+<p>直到经过<code>*sl = make([]string, 4)</code>，之后才能正常通过指针操作切片。</p>
+<pre><code class="golang">func example6()  {
+    sl := new([]string)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+    // new 只拿到了一个指针，并没法使用这个slice，必须经过 make 初始化后，才能使用
+    *sl = make([]string, 4)
+    fmt.Println(&quot;================ make 后 ================&quot;)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    (*sl)[0] = &quot;a&quot;
+    (*sl)[1] = &quot;b&quot;
+    (*sl)[2] = &quot;c&quot;
+    (*sl)[3] = &quot;d&quot;
+    fmt.Println(&quot;================ 赋值后 ================&quot;)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+
+    *sl = append(*sl, &quot;b&quot;)
+    fmt.Println(&quot;================ append 后 ================&quot;)
+    fmt.Printf(&quot;sl:%+v 变量（或变量结构某个指针）指向地址（变量值）：%p 变量地址：%p\n&quot;, sl, sl, &amp;sl)
+}
+</code></pre>
+<pre><code>sl:&amp;[] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006028
+================ make 后 ================
+sl:&amp;[   ] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006028
+================ 赋值后 ================
+sl:&amp;[a b c d] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006028
+================ append 后 ================
+sl:&amp;[a b c d b] 变量（或变量结构某个指针）指向地址（变量值）：0xc000004078 变量地址：0xc000006028
+</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>slice 有<code>[]T{}</code>、<code>new</code> 、<code>make</code>三种声明方式。</li>
+<li>slice 会在变量赋值时发生浅复制。</li>
+<li>copy() 可以让 slice 进行深复制。</li>
+<li>append 再操作切片时，切片空闲容量不足时会发生扩容。</li>
+</ol>
+<p>end!</p>
+
+        
+    
+
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2021/12/10/送了两趟外卖-我想明白了Goroutine-Channel/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2021/11/19/整明白-Golang-struct-实例化和赋值/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="Mr-houzi's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        ghosthouzi@foxmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+                    <a href="#" target="_blank" title="Email Me">
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+    <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2022/04/">四月 2022<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2022/01/">一月 2022<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/12/">十二月 2021<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/11/">十一月 2021<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="sidebar_archives-count">6</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/10/">十月 2020<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/08/">八月 2020<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/07/">七月 2020<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/06/">六月 2020<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/05/">五月 2020<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/04/">四月 2020<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/02/">二月 2020<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/01/">一月 2020<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2019/03/">三月 2019<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2018/07/">七月 2018<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2018/06/">六月 2018<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2018/05/">五月 2018<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2018/04/">四月 2018<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2018/03/">三月 2018<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2018/02/">二月 2018<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/archives/2018/01/">一月 2018<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/11/">十一月 2017<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">6</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                <a class="sidebar_archives-link" href="/categories/分享堆/">分享堆<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/categories/技术栈/">技术栈<span class="sidebar_archives-count">39</span></a></li><li><a class="sidebar_archives-link" href="/categories/菜鸟笔记/">菜鸟笔记<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/categories/随笔-漫谈/">随笔&漫谈<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+            <li class="divider"></li>
+        
+    
+
+    <!-- Pages  -->
+    
+        <li>
+            <a href="https://github.com/Mr-houzi/url2md" title="url2md">
+                
+                    <i class="material-icons sidebar-material-icons">book</i>
+                
+                url2md
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="https://mr-houzi.github.io/leetbook-algorithm-easy" title="初级算法">
+                
+                    <i class="material-icons sidebar-material-icons">book</i>
+                
+                初级算法
+            </a>
+        </li>
+        
+            <li class="divider"></li>
+        
+    
+        <li>
+            <a href="https://github.com/Mr-houzi/Mr-houzi.github.io/issues/4" title="时间轴">
+                
+                    <i class="material-icons sidebar-material-icons">timeline</i>
+                
+                时间轴
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/tags" title="标签云">
+                
+                    <i class="material-icons sidebar-material-icons">loyalty</i>
+                
+                标签云
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/about" title="关于我">
+                
+                    <i class="material-icons sidebar-material-icons">person</i>
+                
+                关于我
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/links" title="友情链接">
+                
+                    <i class="material-icons sidebar-material-icons">link</i>
+                
+                友情链接
+            </a>
+        </li>
+        
+    
+
+    <!-- Article Number  -->
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+    <div class="sidebar-divider"></div>
+
+
+<!-- Theme Material -->
+
+    <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
+        <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+            主题 - Material
+            <span class="sidebar-badge badge-circle">i</span>
+        </div>
+    </a>
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+    <span id="footer-image">
+        <a href="https://mr-houzi.github.io" target="_blank" title="github_logo">
+            <img src="/img/githubPages.jpg" alt="github_logo"><!--
+     --></a>
+    </span>
+
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+
+    <!-- Google + -->
+    
+        <a href="https://www.google.com/" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-gplus">
+                <span class="visuallyhidden">Google Plus</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+        <a href="https://github.com/Mr-houzi" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-github">
+                <span class="visuallyhidden">Github</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+
+    <!-- V2EX -->
+    
+        <a href="https://segmentfault.com/u/mr_houzi" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-v2ex">
+                <span class="visuallyhidden">V2EX</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Segmentfault -->
+    
+        <a href="https://segmentfault.com/u/mr_houzi" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-segmentfault">
+                <span class="visuallyhidden">Segmentfault</span>
+            </button><!--
+     --></a>
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©&nbsp;<span year></span>&nbsp;Mr-houzi - 记录生活点滴
+            
+                <br>
+                
+                    <p>Hosted by <a href="https://beian.miit.gov.cn/" target="_blank">鲁ICP备17047188号-1</a>&nbsp;&nbsp; </span></p>
+                
+            
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
+                <div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import JS File -->
+
+    <script>lsloader.load("lazyload_js","/js/lazyload.min.js?1BcfzuNXqV+ntF6gq+5X3Q==", true)</script>
+
+
+
+    <script>lsloader.load("js_js","/js/js.min.js?Bn9UzEm8RrBSxqyZB0zPjA==", true)</script>
+
+
+
+    <script>lsloader.load("np_js","/js/nprogress.js?pl3Qhb9lvqR1FlyLUna1Yw==", true)</script>
+
+
+<script type="text/ls-javascript" id="NProgress-script">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- UC Browser Compatible -->
+<script>
+	var agent = navigator.userAgent.toLowerCase();
+	if(agent.indexOf('ucbrowser')>0) {
+		document.write('<link rel="stylesheet" href="/css/uc.css">');
+	   alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+	}
+</script>
+
+<!-- Import prettify js  -->
+
+    
+        
+            <script>lsloader.load("prettify_js","/js/prettify.min.js?WN07fivHQSMKWy7BmHBB6w==", true)</script>
+        
+    
+
+
+
+<!-- Window Load -->
+<!-- add class for prettify -->
+<script type="text/ls-javascript" id="window-load">
+    $(window).on('load', function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+
+    
+        
+            $(function() {
+                $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+                prettyPrint();
+                })
+        
+    
+    
+</script>
+
+<!-- MathJax Load-->
+
+
+<!-- Bing Background -->
+
+
+<script type="text/ls-javascript" id="lazy-load">
+    // Offer LazyLoad
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    // Start Queue
+    $(document).ready(function(){
+        setInterval(function(){
+            queue.execNext();
+        },200);
+    });
+</script>
+
+<!-- Custom Footer -->
+
+
+
+<script>
+    var copyrightNow = new Date().getFullYear();
+    var textContent = document.querySelector('span[year]')
+
+    copyrightSince = 2017;
+    if (copyrightSince === copyrightNow||copyrightSince === 0000) {
+        textContent.textContent = copyrightNow
+    } else {
+        textContent.textContent = copyrightSince + ' - ' + copyrightNow
+    }
+
+    (function(){
+        var scriptList = document.querySelectorAll('script[type="text/ls-javascript"]')
+
+        for (var i = 0; i < scriptList.length; ++i) {
+            var item = scriptList[i];
+            lsloader.runInlineScript(item.id,item.id);
+        }
+    })()
+console.log('\n %c © Material Theme | Version: 1.5.6 | https://github.com/viosey/hexo-theme-material %c \n', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-left-radius:5px;border-bottom-left-radius:5px;', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-right-radius:5px;border-bottom-right-radius:5px;');
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>
